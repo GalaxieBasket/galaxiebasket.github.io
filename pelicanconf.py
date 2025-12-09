@@ -2,7 +2,6 @@ AUTHOR = 'Fabien Poupineau'
 SITEURL = ""
 COPYRIGHT_YEAR = 2025
 COPYRIGHT_NAME = 'Fabien Poupineau'
-EXTRA_FOOTER = 'Made with Python + Pelican + Flex'
 DEFAULT_LANG = 'fr'
 TIMEZONE = 'America/Montreal'
 
@@ -35,14 +34,12 @@ DISABLE_SIDEBAR = True
 MAIN_MENU = False # using a custom one
 LINKS = ()
 MENUITEMS = (
-    ("Accueil", "/"),
+    ("Calendrier", "/calendar.html"),
     ("Équipes", "/teams.html"),
-    ("Anciens", "/alumni.html"),
     ("Association", "/about.html"),
     ("Contact", "/contact.html"),
 )
 
-RELATIVE_URLS = True
 # URL Configuration
 PAGE_URL = '{slug}.html'
 PAGE_SAVE_AS = '{slug}.html'
