@@ -1,9 +1,10 @@
 AUTHOR = 'Fabien Poupineau'
-SITENAME = 'Galaxie Basket'
 SITEURL = ""
 COPYRIGHT_YEAR = 2025
 COPYRIGHT_NAME = 'Fabien Poupineau'
-EXTRA_FOOTER = 'Made with Pelican'
+EXTRA_FOOTER = 'Made with Python + Pelican + Flex'
+DEFAULT_LANG = 'fr'
+TIMEZONE = 'America/Montreal'
 
 PATH = "content"
 
@@ -13,7 +14,11 @@ THEME = 'themes/flex'
 
 DEFAULT_LANG = 'FR'
 
-SITELOGO = '/images/GalaxieBasket_Logo-05.png'
+SITENAME = 'Galaxie Basket'
+SITETITLE = 'Galaxie Basket'
+SITESUBTITLE = 'Pratiques & compétition de basketball\nPlateau Mont-Royal, Montréal'
+SITEDESCRIPTION = 'Club de Basketball sur le Plateau Mont-Royal'
+SITELOGO = '/images/Logo_GalaxieBasket invert 12.png'
 
 # Feed generation is usually not desired when developing
 FEED_ALL_ATOM = None
@@ -25,11 +30,22 @@ AUTHOR_FEED_RSS = None
 # Disable automatic page display
 DISPLAY_PAGES_ON_MENU = False
 
-# Side bar
-LINKS = (
+# Side bar / Main menu
+DISABLE_SIDEBAR = True
+MAIN_MENU = False # using a custom one
+LINKS = ()
+MENUITEMS = (
     ("Accueil", "/"),
-    ("A propos", "/about.html"),
+    ("Équipes", "/teams.html"),
+    ("Anciens", "/alumni.html"),
+    ("Association", "/about.html"),
+    ("Contact", "/contact.html"),
 )
+
+RELATIVE_URLS = True
+# URL Configuration
+PAGE_URL = '{slug}.html'
+PAGE_SAVE_AS = '{slug}.html'
 
 # Social widget - not used?
 SOCIAL = (
@@ -37,15 +53,6 @@ SOCIAL = (
 )
 
 DEFAULT_PAGINATION = False
-
-# Add custom CSS
-CUSTOM_CSS = 'static/flex_custom_colors.css'
-
-# Make sure Pelican copies your CSS file
-STATIC_PATHS = ['images', 'extra/flex_custom_colors.css']
-EXTRA_PATH_METADATA = {
-    'extra/flex_custom_colors.css': {'path': 'static/flex_custom_colors.css'},
-}
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True

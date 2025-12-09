@@ -1,3 +1,5 @@
 [submodule "themes/flex"]
 	path = themes/flex
 	url = https://github.com/GalaxieBasket/Flex.git
+	branch = basket-theme
+	
