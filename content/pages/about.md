@@ -5,4 +5,4 @@ Slug: about
 Author: Fabien Poupineau
 Summary: A brief description of the page
 
-This is the content of your about page.
+À venir...

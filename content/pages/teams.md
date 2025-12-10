@@ -5,4 +5,4 @@ Slug: teams
 Author: Fabien Poupineau
 Summary: Équipes de Galaxie Basket
 
-This is the content of your about page.
+À venir...
