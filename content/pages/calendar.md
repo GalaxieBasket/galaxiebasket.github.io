@@ -49,6 +49,14 @@ Slug: calendar
     opacity: 0.5;
 }
 
+.fc-icon-chevron-left {
+    color: #1a1a1a;
+}
+
+.fc-icon-chevron-right {
+    color: #1a1a1a;
+}
+
 .fc-theme-standard td,
 .fc-theme-standard th {
     border-color: rgba(238, 209, 117, 0.2) !important;
@@ -169,36 +177,64 @@ Slug: calendar
 </div>
 
 <script>
-function generateRecurringTrainings(trainings, startDate, endDate) {
+
+function datesAreOnSameDay(d1, d2) {
+    // Create new Date objects to avoid mutating the originals
+    const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+    const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
+
+    return utc1 === utc2;
+}
+
+function toLocalISOString(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+}
+
+function generateRecurringTrainings(trainings) {
     const events = [];
-    const start = new Date(startDate);
-    const end = new Date(endDate);
     
     trainings.forEach(training => {
-        let current = new Date(start);
+        let current = new Date(training.startDate);
+        const end = new Date(training.endDate);        
         
         while (current.getDay() !== training.dayOfWeek) {
             current.setDate(current.getDate() + 1);
         }
         
         while (current <= end) {
-            const endTime = new Date(current);
-            const [hours, minutes] = training.time.split(':');
-            endTime.setHours(parseInt(hours) + training.duration, parseInt(minutes), 0);
-            
-            events.push({
-                title: `${training.description}`,
-                start: `${current.toISOString().split('T')[0]}T${training.time}:00`,
-                end: endTime.toISOString().split('T')[0] + 'T' + 
-                     endTime.toTimeString().split(' ')[0],
-                className: 'fc-event-training',
-                extendedProps: {
-                    type: 'training',
-                    location: training.location,
-                    team: training.team,
-                    description: training.description
-                }
-            });
+            const dateIsExempt = training.except.some(date => datesAreOnSameDay(new Date(date), current));
+            if (!dateIsExempt) {
+                const startTime = new Date(current);
+                const [hours, minutes] = training.time.split(':');
+                startTime.setHours(parseInt(hours), parseInt(minutes), 0);
+                
+                const endTime = new Date(startTime);
+                const [hours_duration, minutes_duration] = training.duration.split(':');
+                endTime.setHours(endTime.getHours() + parseInt(hours_duration), endTime.getMinutes() + parseInt(minutes_duration), 0);
+
+                console.log('startTime: ', startTime, startTime.toString(), startTime.toISOString(), toLocalISOString(startTime));
+                console.log('endTime: ', endTime, endTime.toString(), endTime.toISOString(), toLocalISOString(endTime));
+
+                events.push({
+                    title: `${training.description}`,
+                    start: startTime.toISOString(), //toLocalISOString(startTime), //`${current.toISOString().split('T')[0]}T${training.time}:00.000-05:00`,
+                    end: endTime.toISOString(), //toLocalISOString(endTime), //.toISOString().split('T')[0] + 'T' + endTime.toTimeString().split(' ')[0] + ':00.000-05:00',
+                    className: 'fc-event-training',
+                    extendedProps: {
+                        type: 'training',
+                        location: training.location,
+                        team: training.team,
+                        description: training.description
+                    }
+                });
+            }
             
             current.setDate(current.getDate() + 7);
         }
@@ -211,7 +247,6 @@ function processEventsData(data) {
     const events = [];
     
     data.matches.forEach(match => {
-        
         events.push({
             title: `Vs ${match.opponent}`,
             start: `${match.date}T${match.time}:00`,
@@ -229,11 +264,7 @@ function processEventsData(data) {
     const threeMonthsLater = new Date(today);
     threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
     
-    const trainingEvents = generateRecurringTrainings(
-        data.trainings,
-        today.toISOString().split('T')[0],
-        threeMonthsLater.toISOString().split('T')[0]
-    );
+    const trainingEvents = generateRecurringTrainings(data.trainings);
     events.push(...trainingEvents);
     
     data.special_events.forEach(event => {
@@ -274,16 +305,19 @@ function showEventDetails(info) {
     
     let content = '';
     
-    const dateStr = event.start.toLocaleDateString('fr-FR', {
+    const dateStr = event.start.toLocaleDateString('fr-CA', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+        //timeZone: 'America/New_York',
     });
-    const timeStr = event.start.toLocaleTimeString('fr-FR', {
+    const timeStr = event.start.toLocaleTimeString('fr-CA', {
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        //timeZone: 'America/New_York',
     });
+    console.log(event.start, dateStr, timeStr, event.end);
     
     content += `<p><strong>📅 Date:</strong> ${dateStr}</p>`;
     content += `<p><strong>🕐 Heure:</strong> ${timeStr}</p>`;
@@ -296,9 +330,10 @@ function showEventDetails(info) {
         content += `<p><strong>📍 Lieu:</strong> ${props.location}</p>`;
         content += `<p><strong>🏀 Équipe:</strong> ${props.team}</p>`;
         if (event.end) {
-            const endTimeStr = event.end.toLocaleTimeString('fr-FR', {
+            const endTimeStr = event.end.toLocaleTimeString('fr-CA', {
                 hour: '2-digit',
-                minute: '2-digit'
+                minute: '2-digit',
+                //timeZone: 'America/New_York',
             });
             content += `<p><strong>⏱️ Fin:</strong> ${endTimeStr}</p>`;
         }
@@ -339,8 +374,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                locale: 'fr',
-                timeZone: 'America/New_York',
+                locale: 'fr-CA',
+                //timeZone: 'America/New_York',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
