@@ -179,22 +179,9 @@ Slug: calendar
 <script>
 
 function datesAreOnSameDay(d1, d2) {
-    // Create new Date objects to avoid mutating the originals
     const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
     const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
-
     return utc1 === utc2;
-}
-
-function toLocalISOString(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
 function generateRecurringTrainings(trainings) {
@@ -207,9 +194,11 @@ function generateRecurringTrainings(trainings) {
         while (current.getDay() !== training.dayOfWeek) {
             current.setDate(current.getDate() + 1);
         }
+
+        exceptions = training.except.map(rawDate => new Date(rawDate + " UTC-5"));
         
         while (current <= end) {
-            const dateIsExempt = training.except.some(date => datesAreOnSameDay(new Date(date), current));
+            const dateIsExempt = exceptions.some(date => datesAreOnSameDay(date, current));
             if (!dateIsExempt) {
                 const startTime = new Date(current);
                 const [hours, minutes] = training.time.split(':');
@@ -219,13 +208,10 @@ function generateRecurringTrainings(trainings) {
                 const [hours_duration, minutes_duration] = training.duration.split(':');
                 endTime.setHours(endTime.getHours() + parseInt(hours_duration), endTime.getMinutes() + parseInt(minutes_duration), 0);
 
-                console.log('startTime: ', startTime, startTime.toString(), startTime.toISOString(), toLocalISOString(startTime));
-                console.log('endTime: ', endTime, endTime.toString(), endTime.toISOString(), toLocalISOString(endTime));
-
                 events.push({
                     title: `${training.description}`,
-                    start: startTime.toISOString(), //toLocalISOString(startTime), //`${current.toISOString().split('T')[0]}T${training.time}:00.000-05:00`,
-                    end: endTime.toISOString(), //toLocalISOString(endTime), //.toISOString().split('T')[0] + 'T' + endTime.toTimeString().split(' ')[0] + ':00.000-05:00',
+                    start: startTime.toISOString(),
+                    end: endTime.toISOString(),
                     className: 'fc-event-training',
                     extendedProps: {
                         type: 'training',
@@ -248,14 +234,16 @@ function processEventsData(data) {
     
     data.matches.forEach(match => {
         events.push({
-            title: `Vs ${match.opponent}`,
+            title: "Match",
             start: `${match.date}T${match.time}:00`,
             className: "fc-event-match",
             extendedProps: {
                 type: 'match',
                 opponent: match.opponent,
                 location: match.location,
-                team: match.team
+                team: match.team,
+                result: match.result,
+                home: match.home,
             }
         });
     });
@@ -302,39 +290,51 @@ function processEventsData(data) {
 function showEventDetails(info) {
     const event = info.event;
     const props = event.extendedProps;
-    
-    let content = '';
+
+    const timeOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+    };
     
     const dateStr = event.start.toLocaleDateString('fr-CA', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
-        //timeZone: 'America/New_York',
     });
-    const timeStr = event.start.toLocaleTimeString('fr-CA', {
-        hour: '2-digit',
-        minute: '2-digit',
-        //timeZone: 'America/New_York',
-    });
-    console.log(event.start, dateStr, timeStr, event.end);
+    const timeStr = event.start.toLocaleTimeString('fr-CA', timeOptions);
     
+    let title = event.title;
+    let content = '';
     content += `<p><strong>📅 Date:</strong> ${dateStr}</p>`;
     content += `<p><strong>🕐 Heure:</strong> ${timeStr}</p>`;
     
     if (props.type === 'match') {
-        content += `<p><strong>⚔️ Adversaire:</strong> ${props.opponent}</p>`;
+        title = 'Match';
+
+        let middle = ' Vs ';
+        const firstTeam = props.home ? props.team : props.opponent;
+        const secondTeam = props.home ? props.opponent : props.team;
+
+        if (props.result) {
+            const [home, away] = props.result.split('-');
+            const homeWins = parseInt(home) > parseInt(away);
+
+            if (homeWins) {
+                middle = `<p><strong>${firstTeam} ${home}</strong>-${away} ${secondTeam}</p>`;
+            } else {
+                middle = `<p>${firstTeam} ${home}-<strong>${away} ${secondTeam}</strong></p>`;
+            }
+        } else {
+            middle = `<p>${firstTeam} Vs ${secondTeam}</p>`;
+        }
+        content += middle
         content += `<p><strong>📍 Lieu:</strong> ${props.location}</p>`;
-        content += `<p><strong>🏀 Équipe:</strong> ${props.team}</p>`;
     } else if (props.type === 'training') {
         content += `<p><strong>📍 Lieu:</strong> ${props.location}</p>`;
         content += `<p><strong>🏀 Équipe:</strong> ${props.team}</p>`;
         if (event.end) {
-            const endTimeStr = event.end.toLocaleTimeString('fr-CA', {
-                hour: '2-digit',
-                minute: '2-digit',
-                //timeZone: 'America/New_York',
-            });
+            const endTimeStr = event.end.toLocaleTimeString('fr-CA', timeOptions);
             content += `<p><strong>⏱️ Fin:</strong> ${endTimeStr}</p>`;
         }
     } else if (props.type === 'special') {
@@ -345,7 +345,7 @@ function showEventDetails(info) {
         content += `<p><strong>ℹ️ Description:</strong> ${props.description}</p>`;
     }
     
-    document.getElementById('modalTitle').textContent = event.title;
+    document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalContent').innerHTML = content;
     document.getElementById('eventModal').style.display = 'block';
     document.getElementById('modalOverlay').style.display = 'block';
@@ -375,7 +375,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'fr-CA',
-                //timeZone: 'America/New_York',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',

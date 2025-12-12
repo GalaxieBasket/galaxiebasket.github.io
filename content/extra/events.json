@@ -7,7 +7,8 @@
       "location": "ÉS Lucien Pagé",
       "opponent": "École Saint-Joseph (1985) 2",
       "team": "Paul-Bruchési",
-      "result": "W:6-31"
+      "result": "6-31",
+      "home": false
     },
     {
       "date": "2025-11-30",
@@ -15,7 +16,8 @@
       "location": "ÉS Lucien Pagé",
       "opponent": "Externat Mont-Jésus-Marie",
       "team": "Paul-Bruchési",
-      "result": "W:28-9"
+      "result": "28-9",
+      "home": true
     },
     {
       "date": "2025-11-30",
@@ -23,7 +25,8 @@
       "location": "ÉS Lucien Pagé",
       "opponent": "École Louisbourg",
       "team": "Paul-Bruchési",
-      "result": "W:35-10"
+      "result": "35-10",
+      "home": true
     }
   ],
   "trainings": [
@@ -31,7 +34,7 @@
       "dayOfWeek": 1,
       "startDate": "2025-09-22",
       "endDate": "2026-06-16",
-      "except": ["2025-12-22", "2025-12-29", "2026-01-05"],
+      "except": ["2025-12-22", "2025-12-29"],
       "time": "18:00",
       "duration": "1:30",
       "location": "Gymnase de Paul-Bruchési - entrée du Service de Garde",
