@@ -47,8 +47,9 @@
       "date": "2025-11-30",
       "type": "tournament",
       "title": "Tournoi RSEQ",
-      "description": "Festival: https://diffusion.rseq.ca/Default?Type=Team&TeamId=5de44618-b2eb-4755-a6fe-e640519f0302",
-      "location": "ÉS Lucien Pagé"
+      "description": "Festival Moustique",
+      "location": "ÉS Lucien Pagé",
+      "url": "https://diffusion.rseq.ca/Default?Type=Team&TeamId=5de44618-b2eb-4755-a6fe-e640519f0302"
     },
     {
       "date": "2026-01-09",

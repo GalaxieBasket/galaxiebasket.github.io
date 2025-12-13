@@ -57,6 +57,8 @@ STATIC_PATHS = [
 ]
 EXTRA_PATH_METADATA = {
     'extra/favicon.ico': {'path': 'favicon.ico'},
+    'extra/calendar.css': {'path': 'calendar.css'},
+    'extra/calendar.js': {'path': 'calendar.js'},
     'extra/CNAME': {'path': 'CNAME'},
 }
 
