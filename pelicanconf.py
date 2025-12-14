@@ -1,7 +1,7 @@
 AUTHOR = 'Fabien Poupineau'
 SITEURL = ""
 COPYRIGHT_YEAR = 2025
-COPYRIGHT_NAME = 'Fabien Poupineau'
+COPYRIGHT_NAME = 'Galaxie Basket'
 DEFAULT_LANG = 'fr'
 TIMEZONE = 'America/Montreal'
 
