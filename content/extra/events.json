@@ -27,6 +27,38 @@
       "team": "Paul-Bruchési",
       "result": "35-10",
       "home": true
+    },
+    {
+      "date": "2025-02-14",
+      "time": "08:30",
+      "location": "ÉS Antoine de Saint-Exupéry",
+      "opponent": "Académie Louis-Pasteur",
+      "team": "Paul-Bruchési",
+      "home": false
+    },
+    {
+      "date": "2025-02-14",
+      "time": "09:30",
+      "location": "ÉS Antoine de Saint-Exupéry",
+      "opponent": "École Chénier",
+      "team": "Paul-Bruchési",
+      "home": true
+    },
+    {
+      "date": "2025-02-14",
+      "time": "12:30",
+      "location": "ÉS Antoine de Saint-Exupéry",
+      "opponent": "TBD",
+      "team": "Paul-Bruchési",
+      "home": true
+    },
+    {
+      "date": "2025-02-14",
+      "time": "14:30",
+      "location": "ÉS Antoine de Saint-Exupéry",
+      "opponent": "TBD (si victoire à 12:30",
+      "team": "Paul-Bruchési",
+      "home": true
     }
   ],
   "trainings": [
@@ -63,15 +95,16 @@
       "date": "2026-02-14",
       "type": "tournament",
       "title": "Tournoi RSEQ",
-      "description": "Championnat régional jour 1",
-      "location": "ÉS Antoine-de-St-Exupéry"
+      "description": "Championnat régional récréatif",
+      "location": "ÉS Antoine de Saint-Exupéry"
     },
     {
-      "date": "2026-02-15",
-      "type": "tournament",
-      "title": "Tournoi RSEQ",
-      "description": "Championnat régional jour 2",
-      "location": "ÉS Antoine-de-St-Exupéry"
+      "date": "2026-05-15",
+      "time": "18:00",
+      "type": "event",
+      "title": "Alliance",
+      "description": "Galaxie Basket vous emmène voir un match professionel de l'Alliance!",
+      "location": "Auditorium de Verdun"
     }
   ]
 }
