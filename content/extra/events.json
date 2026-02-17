@@ -34,6 +34,7 @@
       "location": "ÉS Antoine de Saint-Exupéry",
       "opponent": "Académie Louis-Pasteur",
       "team": "Paul-Bruchési",
+      "result": "18-24",
       "home": false
     },
     {
@@ -42,13 +43,14 @@
       "location": "ÉS Antoine de Saint-Exupéry",
       "opponent": "École Chénier",
       "team": "Paul-Bruchési",
+      "result": "25-0",
       "home": true
     },
     {
       "date": "2026-02-14",
       "time": "12:30",
       "location": "ÉS Antoine de Saint-Exupéry",
-      "opponent": "TBD",
+      "opponent": "Collège Jacques-Prévert",
       "team": "Paul-Bruchési",
       "home": true
     },
@@ -56,7 +58,7 @@
       "date": "2026-02-14",
       "time": "14:30",
       "location": "ÉS Antoine de Saint-Exupéry",
-      "opponent": "TBD (si victoire à 12:30",
+      "opponent": "École Madeleine-de-Verchères",
       "team": "Paul-Bruchési",
       "home": true
     }
@@ -66,7 +68,7 @@
       "dayOfWeek": 1,
       "startDate": "2025-09-22",
       "endDate": "2026-06-16",
-      "except": ["2025-12-22", "2025-12-29"],
+      "except": ["2025-12-22", "2025-12-29", "2026-03-02"],
       "time": "18:00",
       "duration": "1:30",
       "location": "Gymnase de Paul-Bruchési - entrée du Service de Garde",
@@ -95,7 +97,7 @@
       "date": "2026-02-14",
       "type": "tournament",
       "title": "Tournoi RSEQ",
-      "description": "Championnat régional récréatif",
+      "description": "Championnat régional récréatif: Champion récréatif!",
       "location": "ÉS Antoine de Saint-Exupéry"
     },
     {
