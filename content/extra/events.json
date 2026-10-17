@@ -76,6 +76,28 @@
       "location": "Gymnase de Paul-Bruchési - entrée du Service de Garde",
       "team": "Paul-Bruchési",
       "description": "Pratique"
+    },
+    {
+      "dayOfWeek": 1,
+      "startDate": "2026-10-16",
+      "endDate": "2027-06-09",
+      "except": [],
+      "time": "17:45",
+      "duration": "1:00",
+      "location": "Gymnase de Paul-Bruchési - entrée du Service de Garde",
+      "team": "Paul-Bruchési 5e",
+      "description": "Pratique"
+    },
+    {
+      "dayOfWeek": 1,
+      "startDate": "2026-10-16",
+      "endDate": "2027-06-09",
+      "except": [],
+      "time": "18:50",
+      "duration": "1:00",
+      "location": "Gymnase de Paul-Bruchési - entrée du Service de Garde",
+      "team": "Paul-Bruchési 6e",
+      "description": "Pratique"
     }
   ],
   "special_events": [
@@ -109,6 +131,13 @@
       "title": "Alliance",
       "description": "Galaxie Basket vous emmène voir un match professionel de l'Alliance!",
       "location": "Auditorium de Verdun"
+    },
+    {
+      "date": "2026-11-21",
+      "type": "tournament",
+      "title": "Tournoi RSEQ",
+      "description": "Festival Moustique",
+      "location": "ÉS Lucien Pagé"
     }
   ]
 }
