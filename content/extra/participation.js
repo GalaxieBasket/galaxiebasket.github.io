@@ -495,8 +495,10 @@ function viewPlanner() {
   const colHead = [];
   for (let h = 0; h <= NUM_HALVES; h++) {
     const n = h === Q4 ? g.q4.filter(id => present.has(id)).length : g.halves[h].filter(id => present.has(id)).length;
-    const cls = n === SLOTS ? 'ok' : (n > SLOTS ? 'bad' : 'warn');
-    colHead.push(`<th class="${h === Q4 ? 'pt-q4' : ''}" title="${h === Q4 ? 'Quatrième quart' : esc(halfLabel(h))}">${h === Q4 ? 'Q4' : halfShortLabel(h)}<span class="pt-colcount ${cls}">${n}/${SLOTS}</span>${h === Q4 ? '' : `<span class="pt-colweight" title="Niveau total de l'alignement">★${weights[h]}</span>`}</th>`);
+    // Q4 has free substitution: any number of players can be planned, at least 5 to start.
+    const cls = h === Q4 ? (n >= SLOTS ? 'ok' : 'warn') : (n === SLOTS ? 'ok' : (n > SLOTS ? 'bad' : 'warn'));
+    const count = h === Q4 ? `${n} j.` : `${n}/${SLOTS}`;
+    colHead.push(`<th class="${h === Q4 ? 'pt-q4' : ''}" title="${h === Q4 ? 'Quatrième quart : substitution libre, autant de joueurs que voulu' : esc(halfLabel(h))}">${h === Q4 ? 'Q4' : halfShortLabel(h)}<span class="pt-colcount ${cls}">${count}</span>${h === Q4 ? '' : `<span class="pt-colweight" title="Niveau total de l'alignement">★${weights[h]}</span>`}</th>`);
   }
   const rows = ids.map(id => {
     const p = g.players[id];
