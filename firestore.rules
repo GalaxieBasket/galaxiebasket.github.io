@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// Paste this file in Firebase console > Firestore Database > Rules, after replacing the emails.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isCoach() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['fabien@galaxiebasket.ca'];
+    }
+
+    match /{document=**} {
+      allow read, write: if isCoach();
+    }
+  }
+}

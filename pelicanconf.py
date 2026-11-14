@@ -59,6 +59,9 @@ EXTRA_PATH_METADATA = {
     'extra/favicon.ico': {'path': 'favicon.ico'},
     'extra/calendar.css': {'path': 'calendar.css'},
     'extra/calendar.js': {'path': 'calendar.js'},
+    'extra/participation.js': {'path': 'participation.js'},
+    'extra/participation-rules.js': {'path': 'participation-rules.js'},
+    'extra/participation.css': {'path': 'participation.css'},
     'extra/CNAME': {'path': 'CNAME'},
 }
 

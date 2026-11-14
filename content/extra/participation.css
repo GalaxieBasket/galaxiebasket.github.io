@@ -1,0 +1,169 @@
+/* Galaxie Basket - Participation planner (mobile-first, dark / gold) */
+
+#participation-app {
+    --pt-gold: #eed175;
+    --pt-bg: rgba(45, 45, 45, 0.9);
+    --pt-bg-2: rgba(30, 30, 30, 0.95);
+    --pt-line: rgba(238, 209, 117, 0.2);
+    --pt-text: #e0e0e0;
+    --pt-dim: #9a9a9a;
+    --pt-ok: #4caf7a;
+    --pt-warn: #f0a030;
+    --pt-bad: #e5534b;
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 12px;
+    background: var(--pt-bg);
+    border: 1px solid var(--pt-line);
+    border-radius: 15px;
+    color: var(--pt-text);
+    box-sizing: border-box;
+}
+
+#participation-app *, #participation-app *::before, #participation-app *::after { box-sizing: border-box; }
+#participation-app h2, #participation-app h3 { color: var(--pt-gold); margin: 0.4em 0; }
+#participation-app h2 { font-size: 1.3rem; }
+#participation-app h3 { font-size: 1.05rem; }
+#participation-app a { color: var(--pt-gold); }
+#participation-app .pt-dim { color: var(--pt-dim); font-size: 0.9rem; }
+#participation-app .pt-loading, #participation-app .pt-center { text-align: center; padding: 30px 10px; }
+
+.pt-topbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.pt-crumbs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.95rem; }
+.pt-user { font-size: 0.8rem; color: var(--pt-dim); display: flex; gap: 8px; align-items: center; }
+
+/* The theme (basketball-theme.css) forces gold backgrounds on buttons and gold text on links
+   with !important, so the app's button styles need !important too. */
+#participation-app button, #participation-app .pt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(45deg, #eed175, #e6d45a) !important;
+    border: none !important;
+    border-radius: 22px;
+    color: #1a1a1a !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    text-shadow: none !important;
+    box-shadow: none;
+    padding: 9px 16px;
+    min-height: 40px;
+    cursor: pointer;
+}
+#participation-app button:hover, #participation-app .pt-btn:hover {
+    transform: none;
+    background: linear-gradient(45deg, #e6d45a, #dcc83f) !important;
+    color: #1a1a1a !important;
+}
+#participation-app button.pt-secondary, #participation-app .pt-btn.pt-secondary,
+#participation-app button.pt-secondary:hover, #participation-app .pt-btn.pt-secondary:hover {
+    background: transparent !important;
+    color: var(--pt-gold) !important;
+    border: 1px solid var(--pt-gold) !important;
+}
+#participation-app button.pt-secondary:hover, #participation-app .pt-btn.pt-secondary:hover { background: rgba(238, 209, 117, 0.12) !important; }
+#participation-app button.pt-danger, #participation-app button.pt-danger:hover { background: var(--pt-bad) !important; color: #fff !important; }
+#participation-app button.pt-small { padding: 4px 10px; min-height: 30px; font-size: 0.8rem; }
+#participation-app button.pt-active { outline: 2px solid #fff; }
+#participation-app button:disabled { opacity: 0.5; cursor: default; }
+
+#participation-app input, #participation-app select {
+    background: #1e1e1e;
+    color: var(--pt-text);
+    border: 1px solid var(--pt-line);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 1rem;
+    min-height: 40px;
+    max-width: 100%;
+}
+
+.pt-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; margin: 10px 0; }
+.pt-form label { display: flex; flex-direction: column; font-size: 0.8rem; color: var(--pt-dim); gap: 2px; }
+
+.pt-list { list-style: none; margin: 0; padding: 0; }
+.pt-list li {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
+    padding: 10px; margin: 6px 0; background: var(--pt-bg-2); border: 1px solid var(--pt-line); border-radius: 10px;
+}
+.pt-list li.pt-inactive { opacity: 0.55; }
+.pt-list .pt-grow { flex: 1 1 160px; min-width: 0; }
+.pt-list input.pt-num { width: 70px; }
+.pt-list input.pt-name { width: 100%; min-width: 120px; }
+
+.pt-setup { border: 1px dashed var(--pt-gold); border-radius: 10px; padding: 14px; background: var(--pt-bg-2); }
+.pt-setup code { background: #111; padding: 1px 5px; border-radius: 4px; }
+
+/* Planner */
+.pt-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.pt-chip {
+    padding: 6px 10px; border-radius: 16px; border: 1px solid var(--pt-line); background: var(--pt-bg-2);
+    font-size: 0.85rem; cursor: pointer; user-select: none;
+}
+.pt-chip.on { border-color: var(--pt-ok); background: rgba(76, 175, 122, 0.18); }
+.pt-chip.off { opacity: 0.5; text-decoration: line-through; }
+
+.pt-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+
+.pt-gridwrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--pt-line); border-radius: 10px; }
+table.pt-grid { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.85rem; margin: 0; }
+table.pt-grid th, table.pt-grid td {
+    border: 0; border-bottom: 1px solid rgba(238, 209, 117, 0.1); padding: 0; text-align: center; background: transparent;
+}
+table.pt-grid th { background: var(--pt-bg-2); color: var(--pt-gold); font-weight: 700; padding: 4px 2px; white-space: nowrap; font-size: 0.78rem; }
+table.pt-grid th.pt-q4, table.pt-grid td.pt-q4 { border-left: 2px solid var(--pt-line); }
+table.pt-grid th .pt-colcount { display: block; font-size: 0.8rem; }
+table.pt-grid th .pt-colcount.ok { color: var(--pt-ok); }
+table.pt-grid th .pt-colcount.bad { color: var(--pt-bad); }
+table.pt-grid th .pt-colcount.warn { color: var(--pt-warn); }
+table.pt-grid td.pt-player, table.pt-grid th.pt-player {
+    position: sticky; left: 0; z-index: 2; background: #262626; text-align: left; padding: 4px 8px; min-width: 110px; max-width: 150px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+table.pt-grid tr.pt-absent td { opacity: 0.35; }
+table.pt-grid .pt-badge {
+    display: inline-block; min-width: 26px; padding: 2px 6px; border-radius: 12px; font-weight: 700; color: #1a1a1a;
+}
+.pt-badge.ok { background: var(--pt-ok); }
+.pt-badge.bad { background: var(--pt-bad); color: #fff; }
+.pt-badge.warn { background: var(--pt-warn); }
+
+#participation-app button.pt-cell {
+    width: 100%; min-width: 44px; height: 44px; border-radius: 0; border: 0 !important; padding: 0; background: transparent !important; color: var(--pt-text) !important;
+    font-size: 1.1rem; position: relative; touch-action: manipulation; -webkit-user-select: none; user-select: none;
+}
+#participation-app button.pt-cell:hover { background: rgba(238, 209, 117, 0.12) !important; }
+#participation-app button.pt-cell.in { background: rgba(238, 209, 117, 0.85) !important; color: #1a1a1a !important; }
+#participation-app button.pt-cell.credit { background: rgba(71, 218, 237, 0.35) !important; }
+#participation-app button.pt-cell.out { background: rgba(229, 83, 75, 0.25) !important; }
+#participation-app button.pt-cell.lock::after { content: "\1F512"; position: absolute; top: 1px; right: 2px; font-size: 0.6rem; }
+#participation-app button.pt-cell:disabled { opacity: 0.35; }
+#participation-app .pt-lockmode button.pt-cell { outline: 1px dashed rgba(255, 255, 255, 0.25); outline-offset: -3px; }
+
+.pt-alerts { margin: 12px 0; display: flex; flex-direction: column; gap: 6px; }
+.pt-alert { padding: 8px 10px; border-radius: 8px; font-size: 0.9rem; border-left: 4px solid; background: var(--pt-bg-2); }
+.pt-alert.error { border-color: var(--pt-bad); }
+.pt-alert.warning { border-color: var(--pt-warn); }
+.pt-alert.info { border-color: var(--pt-ok); }
+
+.pt-panel { background: var(--pt-bg-2); border: 1px solid var(--pt-line); border-radius: 10px; padding: 10px; margin: 10px 0; }
+
+@media (min-width: 700px) {
+    #participation-app { padding: 20px; }
+    table.pt-grid { font-size: 0.95rem; }
+}
+
+/* Skill weight */
+.pt-list label.pt-weight { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--pt-dim); }
+#participation-app .pt-list label.pt-weight select { padding: 6px 4px; }
+table.pt-grid th .pt-colweight { display: block; font-size: 0.72rem; color: var(--pt-dim); font-weight: 400; }
+table.pt-grid .pt-pweight { font-size: 0.72rem; color: var(--pt-dim); white-space: nowrap; }
+
+/* CSV import */
+.pt-file { display: inline-block; cursor: pointer; }
+.pt-file input[type="file"] { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.pt-file input[type="file"]:focus-visible + .pt-btn { outline: 2px solid #fff; }
+.pt-import { border: 1px dashed var(--pt-gold); border-radius: 10px; padding: 10px; margin: 8px 0; }
+table.pt-importtable td { padding: 4px 8px; text-align: left; }
