@@ -196,10 +196,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.getElementById('basketball-calendar');
             calendarEl.style.display = 'block';
 
+            // Sur téléphone, la grille du mois est illisible: vue liste par défaut
+            const isMobile = window.matchMedia('(max-width: 600px)').matches;
+
             const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
+                initialView: isMobile ? 'listMonth' : 'dayGridMonth',
                 locale: 'fr-CA',
-                headerToolbar: {
+                headerToolbar: isMobile ? {
+                    left: 'prev,next',
+                    center: 'title',
+                    right: 'listMonth,dayGridMonth'
+                } : {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,listMonth'

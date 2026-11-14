@@ -97,6 +97,20 @@
     border: 1px solid #47daed !important;
 }
 
+/* Vue liste: en-têtes de jour sombres (fond gris clair par défaut, illisible avec le texte doré) */
+.fc .fc-list-day-cushion {
+    background: rgba(30, 30, 30, 0.95) !important;
+}
+
+.fc .fc-list-day-text,
+.fc .fc-list-day-side-text {
+    color: #eed175 !important;
+}
+
+.fc .fc-list-event:hover td {
+    background: rgba(238, 209, 117, 0.15) !important;
+}
+
 .fc-popover {
     background: rgba(30, 30, 30, 0.98) !important;
     border: 2px solid #eed175 !important;
@@ -155,4 +169,38 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     z-index: 9999;
+}
+
+@media (max-width: 600px) {
+    #basketball-calendar {
+        margin: 1rem 0;
+        padding: 0.5rem;
+        border: none;
+    }
+
+    /* Titre du mois sur sa propre ligne, boutons en dessous */
+    .fc .fc-toolbar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .fc .fc-toolbar-chunk:nth-child(2) {
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.2rem !important;
+    }
+
+    .fc .fc-toolbar-title::after {
+        display: none;
+    }
+
+    .event-modal {
+        padding: 1.25rem;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
 }
