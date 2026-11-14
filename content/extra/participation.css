@@ -167,3 +167,7 @@ table.pt-grid .pt-pweight { font-size: 0.72rem; color: var(--pt-dim); white-spac
 .pt-file input[type="file"]:focus-visible + .pt-btn { outline: 2px solid #fff; }
 .pt-import { border: 1px dashed var(--pt-gold); border-radius: 10px; padding: 10px; margin: 8px 0; }
 table.pt-importtable td { padding: 4px 8px; text-align: left; }
+
+/* Game details edit */
+.pt-edit { margin: 6px 0 4px; }
+.pt-edit summary { cursor: pointer; color: var(--pt-gold); font-size: 0.9rem; }

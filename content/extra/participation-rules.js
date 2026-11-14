@@ -260,11 +260,13 @@ function feasibility(game, halves, sets, present, out, credits, issues, lbl) {
 /**
  * Generate lineups. Keeps locked cells that are listed (forced in) and treats locked cells
  * that are not listed as forbidden. All other cells are cleared and refilled.
- * Deterministic. Returns { halves, issues } and does not mutate the game.
+ * Deterministic by default; pass `opts.seed` (any integer) to shuffle the tie-breaks and get a
+ * different valid plan for each seed. Returns { halves, issues } and does not mutate the game.
  */
-export function suggestLineups(game) {
+export function suggestLineups(game, opts = {}) {
   const cmp = comparePlayers(game);
   const present = [...new Set(game.present || [])].sort(cmp);
+  if (opts.seed !== undefined) shuffle(present, mulberry32(opts.seed));
   const presentSet = new Set(present);
   const order = {};
   present.forEach((id, i) => { order[id] = i; });
@@ -468,6 +470,25 @@ function balanceWeights(lists, weight, keptSet, can, subIn) {
     if (best === null) break;
     for (const m of best.seq) apply(m);
   }
+}
+
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffle(arr, rnd) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 function permutations(arr) {

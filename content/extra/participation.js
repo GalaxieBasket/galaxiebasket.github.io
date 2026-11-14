@@ -66,6 +66,8 @@ const fmtDate = s => {
   const d = new Date(s + 'T12:00:00');
   return isNaN(d) ? s : d.toLocaleDateString('fr-CA', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 };
+/** Date and optional time of a game, e.g. "sam. 30 nov. 2026 · 9h15". */
+const fmtWhen = g => fmtDate(g.date) + (g.time ? ` · ${g.time.replace(':', 'h')}` : '');
 const isPlaceholder = () => Object.values(firebaseConfig).some(v => v === 'REPLACE_ME');
 const placeholderEmails = () => ALLOWED_EMAILS.every(e => /^COACH_EMAIL_/.test(e));
 const team = () => state.teams.find(t => t.id === state.route.teamId);
@@ -76,6 +78,7 @@ function gameFromDoc(id, d) {
   return {
     id,
     date: d.date || '',
+    time: d.time || '',
     opponent: d.opponent || '',
     location: d.location || '',
     players: d.players || {},
@@ -144,6 +147,7 @@ async function boot() {
   root.addEventListener('click', onClick);
   root.addEventListener('change', onChange);
   root.addEventListener('submit', onSubmit);
+  root.addEventListener('toggle', e => { if (e.target.matches && e.target.matches('.pt-edit')) state.editOpen = e.target.open; }, true);
   root.addEventListener('pointerdown', onPointerDown);
   root.addEventListener('pointerup', cancelPress);
   root.addEventListener('pointerleave', cancelPress, true);
@@ -217,7 +221,7 @@ function onRoute() {
   }
   if (saveTimer) saveNow();
   state.route = r;
-  state.game = null; state.subForm = null; state.lockMode = false;
+  state.game = null; state.subForm = null; state.lockMode = false; state.editOpen = false;
   syncGamesListener();
   if (r.view === 'planner') {
     const g = state.games.find(x => x.id === r.gameId);
@@ -400,7 +404,7 @@ function printGame(g) {
 
   const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(t.name)} · ${esc(fmtDate(g.date))} · ${esc(g.opponent || 'Match')}</title>
+<title>${esc(t.name)} · ${esc(fmtWhen(g))} · ${esc(g.opponent || 'Match')}</title>
 <style>
   @page { size: letter portrait; margin: 12mm; }
   * { box-sizing: border-box; }
@@ -432,7 +436,7 @@ function printGame(g) {
 </style></head><body>
 <div class="noprint"><button onclick="window.print()">🖨️ Imprimer / PDF</button></div>
 <h1>Galaxie Basket · ${esc(t.name)}</h1>
-<div class="meta">${esc(fmtDate(g.date))} · ${esc(g.opponent || 'Adversaire ?')}${g.location ? ` · ${esc(g.location)}` : ''} · moitiés de ${esc(t.halfMinutes)} min · ${ids.length} joueurs présents</div>
+<div class="meta">${esc(fmtWhen(g))} · ${esc(g.opponent || 'Adversaire ?')}${g.location ? ` · ${esc(g.location)}` : ''} · moitiés de ${esc(t.halfMinutes)} min · ${ids.length} joueurs présents</div>
 ${alerts}
 <h2>Alignements</h2>
 <div class="boxes">${boxes}</div>
@@ -460,9 +464,10 @@ function weightOptions(sel) {
 
 function viewGames() {
   const t = team();
-  const games = state.games.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  // Most recent day first; games of the same day (tournament) in time order.
+  const games = state.games.slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.time).localeCompare(String(b.time)));
   const items = games.map(g => `<li>
-      <div class="pt-grow"><a href="#/t/${esc(t.id)}/g/${esc(g.id)}"><b>${esc(fmtDate(g.date))}</b> · ${esc(g.opponent || 'Adversaire ?')}</a>
+      <div class="pt-grow"><a href="#/t/${esc(t.id)}/g/${esc(g.id)}"><b>${esc(fmtWhen(g))}</b> · ${esc(g.opponent || 'Adversaire ?')}</a>
       <div class="pt-dim">${esc(g.location)} ${g.location ? '· ' : ''}${resolveGame(JSON.parse(JSON.stringify(g)), t).present.length} présents</div></div>
       <button class="pt-danger pt-small" data-action="deleteGame" data-id="${esc(g.id)}">Supprimer</button>
     </li>`).join('');
@@ -472,6 +477,7 @@ function viewGames() {
     <h3>Nouveau match</h3>
     <form class="pt-form" data-form="addGame">
       <label>Date<input type="date" name="date" value="${today()}" required></label>
+      <label>Heure<input type="time" name="time" step="300"></label>
       <label>Adversaire<input name="opponent" placeholder="Ex. Rosemont"></label>
       <label>Lieu<input name="location" placeholder="Ex. Gymnase"></label>
       <button type="submit">Créer</button>
@@ -525,8 +531,15 @@ function viewPlanner() {
   const alerts = issues.slice().sort((a, b) => order[a.level] - order[b.level])
     .map(i => `<div class="pt-alert ${i.level}">${i.level === 'error' ? '⛔ ' : (i.level === 'warning' ? '⚠️ ' : '✅ ')}${esc(i.message)}</div>`).join('');
 
-  return `<h2>${esc(fmtDate(g.date))} · ${esc(g.opponent || 'Match')}</h2>
+  return `<h2>${esc(fmtWhen(g))} · ${esc(g.opponent || 'Match')}</h2>
     <div class="pt-dim">${esc(g.location)} · ${esc(t.name)} · moitiés de ${esc(t.halfMinutes)} min</div>
+    <details class="pt-edit" ${state.editOpen ? 'open' : ''}><summary>Modifier le match</summary>
+      <div class="pt-form">
+        <label>Date<input type="date" value="${esc(g.date)}" data-change="gameField" data-field="date" required></label>
+        <label>Heure<input type="time" step="300" value="${esc(g.time)}" data-change="gameField" data-field="time"></label>
+        <label>Adversaire / nom<input value="${esc(g.opponent)}" data-change="gameField" data-field="opponent" placeholder="Ex. Rosemont"></label>
+        <label>Lieu<input value="${esc(g.location)}" data-change="gameField" data-field="location" placeholder="Ex. Gymnase"></label>
+      </div></details>
     <h3>Présences (${g.present.length})</h3>
     <div class="pt-chips">${chips}</div>
     ${g.present.length > MAX_PLAYERS ? `<div class="pt-alert error">Maximum ${MAX_PLAYERS} joueurs sur la feuille de match.</div>` : ''}
@@ -593,6 +606,10 @@ function saveNow() {
   const tid = state.route.teamId;
   if (!g || !tid || !db) return;
   fb.updateDoc(fb.doc(db, 'teams', tid, 'games', g.id), {
+    date: g.date,
+    time: g.time,
+    opponent: g.opponent,
+    location: g.location,
     players: g.players, // copy, used to show deleted players in old lineups
     absent: g.absent,
     present: g.present,
@@ -708,7 +725,8 @@ function onClick(e) {
         alert(`Il faut au moins ${MIN_PLAYERS} joueurs présents pour générer les alignements (actuellement ${g.present.length}).\n\nAjoutez des joueurs à l'équipe (page Joueurs) ou retirez des absences en touchant les noms dans « Présences ».`);
         break;
       }
-      const r = suggestLineups(g);
+      // New seed on every click: each press proposes a different valid plan.
+      const r = suggestLineups(g, { seed: Math.floor(Math.random() * 2 ** 31) });
       g.halves = r.halves;
       changed();
       break;
@@ -755,6 +773,17 @@ function onChange(e) {
   if (!el) return;
   const k = el.dataset.change;
   const t = team();
+  if (k === 'gameField') {
+    const g = state.game;
+    const field = el.dataset.field;
+    if (!g || !['date', 'time', 'opponent', 'location'].includes(field)) return;
+    const v = el.value.trim();
+    if (field === 'date' && !v) { el.value = g.date; return; }
+    g[field] = v;
+    state.editOpen = true; // keep the edit panel open after re-render
+    changed();
+    return;
+  }
   if (k === 'importFile') {
     readImportFile(el).catch(err => { console.error(err); alert('Lecture du fichier impossible : ' + err.message); });
     return;
@@ -810,6 +839,7 @@ function onSubmit(e) {
     const ref = fb.doc(fb.collection(db, 'teams', t.id, 'games'));
     fb.setDoc(ref, {
       date: fd.get('date'),
+      time: fd.get('time') || '',
       opponent: String(fd.get('opponent')).trim(),
       location: String(fd.get('location')).trim(),
       players, present, absent: [],
