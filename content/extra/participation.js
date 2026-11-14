@@ -301,9 +301,9 @@ function viewRoster() {
   const items = players.map(p => `<li class="${p.active === false ? 'pt-inactive' : ''}">
       <input class="pt-num" type="number" min="0" max="99" inputmode="numeric" value="${esc(p.number)}" data-change="playerNumber" data-id="${esc(p.id)}" aria-label="Numéro">
       <div class="pt-grow"><input class="pt-name" value="${esc(p.name)}" data-change="playerName" data-id="${esc(p.id)}" aria-label="Nom"></div>
-      <label class="pt-weight" title="Niveau (1 = débutant, 5 = fort)">Niveau<select data-change="playerWeight" data-id="${esc(p.id)}">${weightOptions(p.weight)}</select></label>
-      <button class="pt-secondary pt-small" data-action="togglePlayer" data-id="${esc(p.id)}">${p.active === false ? 'Réactiver' : 'Désactiver'}</button>
-      <button class="pt-danger pt-small" data-action="deletePlayer" data-id="${esc(p.id)}" aria-label="Supprimer ${esc(p.name)}">Supprimer</button>
+      <label class="pt-weight" title="Niveau (1 = débutant, 5 = fort)">★<select data-change="playerWeight" data-id="${esc(p.id)}" aria-label="Niveau">${weightOptions(p.weight)}</select></label>
+      <button class="pt-secondary pt-small pt-icon" data-action="togglePlayer" data-id="${esc(p.id)}" title="${p.active === false ? 'Réactiver' : 'Désactiver'}" aria-label="${p.active === false ? 'Réactiver' : 'Désactiver'} ${esc(p.name)}">${p.active === false ? '↺' : '⏸'}</button>
+      <button class="pt-danger pt-small pt-icon" data-action="deletePlayer" data-id="${esc(p.id)}" title="Supprimer" aria-label="Supprimer ${esc(p.name)}">🗑</button>
     </li>`).join('');
   return `<h2>${esc(t.name)} · Joueurs</h2>
     <div class="pt-toolbar"><a class="pt-btn" href="#/t/${esc(t.id)}/games">Voir les matchs</a></div>

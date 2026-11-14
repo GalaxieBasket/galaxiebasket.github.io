@@ -85,13 +85,16 @@
 
 .pt-list { list-style: none; margin: 0; padding: 0; }
 .pt-list li {
-    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;
-    padding: 10px; margin: 6px 0; background: var(--pt-bg-2); border: 1px solid var(--pt-line); border-radius: 10px;
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between;
+    padding: 5px 8px; margin: 4px 0; background: var(--pt-bg-2); border: 1px solid var(--pt-line); border-radius: 10px;
+    line-height: 1.3;
 }
 .pt-list li.pt-inactive { opacity: 0.55; }
-.pt-list .pt-grow { flex: 1 1 160px; min-width: 0; }
-.pt-list input.pt-num { width: 70px; }
-.pt-list input.pt-name { width: 100%; min-width: 120px; }
+.pt-list .pt-grow { flex: 1 1 80px; min-width: 0; }
+#participation-app .pt-list input, #participation-app .pt-list select { min-height: 34px; padding: 4px 8px; }
+#participation-app .pt-list input.pt-num { width: 48px; padding: 4px; text-align: center; }
+.pt-list input.pt-name { width: 100%; min-width: 0; }
+#participation-app button.pt-icon { min-width: 34px; min-height: 34px; padding: 0 6px; font-size: 1rem; }
 
 .pt-setup { border: 1px dashed var(--pt-gold); border-radius: 10px; padding: 14px; background: var(--pt-bg-2); }
 .pt-setup code { background: #111; padding: 1px 5px; border-radius: 4px; }
@@ -119,7 +122,7 @@ table.pt-grid th .pt-colcount.ok { color: var(--pt-ok); }
 table.pt-grid th .pt-colcount.bad { color: var(--pt-bad); }
 table.pt-grid th .pt-colcount.warn { color: var(--pt-warn); }
 table.pt-grid td.pt-player, table.pt-grid th.pt-player {
-    position: sticky; left: 0; z-index: 2; background: #262626; text-align: left; padding: 4px 8px; min-width: 110px; max-width: 150px;
+    position: sticky; left: 0; z-index: 2; background: #262626; text-align: left; padding: 0 8px; min-width: 110px; max-width: 150px; line-height: 1.2;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 table.pt-grid tr.pt-absent td { opacity: 0.35; }
@@ -131,7 +134,7 @@ table.pt-grid .pt-badge {
 .pt-badge.warn { background: var(--pt-warn); }
 
 #participation-app button.pt-cell {
-    width: 100%; min-width: 44px; height: 44px; border-radius: 0; border: 0 !important; padding: 0; background: transparent !important; color: var(--pt-text) !important;
+    display: flex; width: 100%; min-width: 40px; height: 34px; min-height: 0; border-radius: 0; border: 0 !important; padding: 0; background: transparent !important; color: var(--pt-text) !important;
     font-size: 1.1rem; position: relative; touch-action: manipulation; -webkit-user-select: none; user-select: none;
 }
 #participation-app button.pt-cell:hover { background: rgba(238, 209, 117, 0.12) !important; }
@@ -149,6 +152,11 @@ table.pt-grid .pt-badge {
 .pt-alert.info { border-color: var(--pt-ok); }
 
 .pt-panel { background: var(--pt-bg-2); border: 1px solid var(--pt-line); border-radius: 10px; padding: 10px; margin: 10px 0; }
+
+/* Téléphone: pas de 2e carte dans la carte de la page, on récupère la largeur */
+@media (max-width: 699px) {
+    #participation-app { padding: 0; margin: 10px 0; background: none; border: 0; }
+}
 
 @media (min-width: 700px) {
     #participation-app { padding: 20px; }
